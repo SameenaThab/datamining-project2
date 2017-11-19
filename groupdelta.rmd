@@ -1,0 +1,234 @@
+---
+title: "group_delta"
+author: "Your Name"
+date: "January 18, 2017"
+output:
+  html_document:
+    css: min.css
+    highlight: textmate
+    theme: null
+  pdf_document: default
+---
+#Q1
+```{r}
+iris<-read.csv("iris.data.txt",header = T)
+minmaxnorm<-function(trdata,minV=0,maxV=1,tedata=NULL)
+{
+    min<-min(trdata)
+    max<-max(trdata)
+    diff1<-max-min
+    diff2<-maxV-minV
+    v<-vector('numeric')
+    for(i in 1:length(trdata))
+    {
+        x=trdata[i]
+        trdata[i]<-minV+(((x-min)/diff1)*diff2)
+        #v[i]<-y
+    }
+    print("normalized train data:\n")
+    print(trdata)
+    
+    if(!is.null(tedata))
+    {
+        normtedata<-vector('numeric')
+        for(i in 1:length(tedata))  
+        {
+            x=tedata[i]
+            tedata[i]<-minV+(((tedata[i]-min)/diff1)*diff2) 
+        }
+        print("normalized test data:\n")
+        print(tedata)
+    }
+    lt<-list(trdata,tedata)
+    
+    return(lt)
+}
+
+```
+
+```{r}
+zscoreNorm<-function(trdata,tedata=NULL,madflag=0)
+{
+   mn<-mean(trdata)
+  sde<-sd(trdata)
+  library(lsr)
+  ade<-aad(trdata)
+  normtr<-vector('numeric')
+  for(i in 1:length(trdata))
+  {
+    if(madflag==1)
+    {
+    normtr[i]<-(trdata[i]-mn)/ade  
+    }
+    else
+    {
+    normtr[i]<-(trdata[i]-mn)/sde
+    }#v[i]<-y
+  }
+  print("normalized train data:\n")
+  print(trdata)
+    normte<-vector('numeric')
+if(!is.null(tedata))
+{
+  #newdata<-append(as.vector(trdata),as.vector(tedata))
+ # returnValue(class(tedata))
+   #mn2<-mean(newdata)
+    #sde2<-sd(newdata)
+ #   print(newdata)
+  library(lsr)
+  #ade2<-aad(newdata)
+  for(i in 1:length(tedata))
+    {
+    if(madflag==1)
+    {
+    normte[i]<-(tedata[i]-mn)/ade  
+    }
+    else
+    {
+    normte[i]<-(tedata[i]-mn)/sde
+    }
+    }
+   print("normalized test data:\n")
+   print(tedata)
+}
+lt<-list(normtr,normte)
+    return(lt)
+}
+```
+#Q2
+```{r}
+q2data<-c(200, 300, 400, 600,1000)
+```
+```{r}
+minmaxnorm(q2data,0,1)
+```
+
+```{r}
+zscoreNorm(q2data)
+```
+
+```{r}
+zscoreNorm(q2data,,1)
+```
+
+#Q3A
+```{r}
+q3data<-c(1.95,3.1,5.68,6.2)
+iris<-read.csv("iris.data.txt",header = T)
+l<-minmaxnorm(iris$X1.4,-1,1,q3data)
+x<-l[[2]]
+y1<-as.data.frame(y)
+library(ggplot2)
+#plot(y1, type="o", col="blue")
+#curve(y)
+```
+#Q3B
+```{r}
+r<-zscoreNorm(iris$X1.4,q3data)
+y<-r[[2]]
+```
+#Q3C
+```{r}
+par(mfrow=c(1,2))
+plot(x,type = "o")
+plot(y,type = "o")
+ggplot(as.data.frame(x),aes(x,NULL)+geom_line(aes(color="First line"))
+#+
+  geom_line(as.data.frame(y),aes(color="Second line"))+
+  labs(color="Legend text")
+```
+
+#Q4-a
+```{r}
+A<-c(1.4,1.8,1.3,0.9,1.5)
+B<-c(1.3,1.4,1.2,3.5,2.1)
+C<-c(2.9,3.2,2.9,3.1,3.3)
+x1<-c(1.4,1.3,2.9)
+x2<-c(1.8,1.4,3.2)
+x3<-c(1.3,1.2,2.9)
+x4<-c(0.9,3.5,3.1)
+x5<-c(1.5,2.1,3.3)
+q4data<-data.frame(A,B,C)
+x<-c(1.25,1.78,3.01)
+manhattan<-vector('numeric')
+euclidean<-vector('numeric')
+minkowski<-vector('numeric')
+supremum<-vector('numeric')
+cose<-vector('numeric')
+
+#print("Manhattan distance between x1 and x")
+manhattan[1]<-dist(as.matrix(rbind(x1,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x2 and x")
+manhattan[2]<-dist(as.matrix(rbind(x2,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x3 and x")
+manhattan[3]<-dist(as.matrix(rbind(x3,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x4 and x")
+manhattan[4]<-dist(as.matrix(rbind(x4,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x5 and x")
+manhattan[5]<-dist(as.matrix(rbind(x5,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("***********")
+#print("euclidean distance between x1 and x")
+euclidean[1]<-dist(as.matrix(rbind(x1,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x2 and x")
+euclidean[2]<-dist(as.matrix(rbind(x2,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x3 and x")
+euclidean[3]<-dist(as.matrix(rbind(x3,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x4 and x")
+euclidean[4]<-dist(as.matrix(rbind(x4,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x5 and x")
+euclidean[5]<-dist(as.matrix(rbind(x5,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("***********")
+#print("minkowski distance between x1 and x")
+minkowski[1]<-dist(as.matrix(rbind(x1,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x2 and x")
+minkowski[2]<-dist(as.matrix(rbind(x2,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x3 and x")
+minkowski[3]<-dist(as.matrix(rbind(x3,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x4 and x")
+minkowski[4]<-dist(as.matrix(rbind(x4,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x5 and x")
+minkowski[5]<-dist(as.matrix(rbind(x5,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("***********")
+supremum[1]=dist(as.matrix(rbind(x1,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[2]=dist(as.matrix(rbind(x2,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[3]=dist(as.matrix(rbind(x3,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[4]=dist(as.matrix(rbind(x4,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[5]=dist(as.matrix(rbind(x5,x)), method = "maximum", diag = FALSE, upper = FALSE)
+# cosi<-function(x,y)
+# {
+# sum1<-x[1]*y[1]+x[2]*y[2]+x[3]*y[3]  
+# sum2<-sqrt(x[1]^2+x[2]^2+x[3]^3)
+# sum3<-sqrt(y[1]^2+y[2]^2+y[3]^3)
+# pro1<-sum2*sum3
+# pro2<-sum1/pro1
+# return(pro1)
+# }
+library(lsa)
+cose[1]<-cosine(x1,x)
+cose[2]<-cosine(x2,x)
+cose[3]<-cosine(x3,x)
+cose[4]<-cosine(x4,x)
+cose[5]<-cosine(x5,x)
+
+distances<-data.frame(manhattan,euclidean,minkowski,supremum,cose)
+print(distances)
+```
+#Q4-b
+```{r}
+  A1<-minmaxnorm(A)
+  B1<-minmaxnorm(B)
+  C1<-minmaxnorm(C)
+  euclidean1<-data.frame('numeric')
+  q4bdata<-cbind(A1[[1]],B1[[1]],C1[[1]])
+  euclidean1[1]<-dist(as.matrix(rbind(q4bdata[1,],x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x2 and x")
+euclidean1[2]<-dist(as.matrix(rbind(q4bdata[2,],x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x3 and x")
+euclidean1[3]<-dist(as.matrix(rbind(q4bdata[3,],x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x4 and x")
+euclidean1[4]<-dist(as.matrix(rbind(q4bdata[4,],x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x5 and x")
+euclidean1[5]<-dist(as.matrix(rbind(q4bdata[5,],x)), upper=FALSE, diag=FALSE, method="euclidean")
+print("euclidean distances with normalized data")
+print(euclidean1)
+```

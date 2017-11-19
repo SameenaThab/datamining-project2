@@ -1,0 +1,226 @@
+---
+title: "P2_template"
+author: "Your Name"
+date: "January 18, 2017"
+output:
+  html_document:
+    css: min.css
+    highlight: textmate
+    theme: null
+  pdf_document: default
+---
+#Q1
+```{r}
+iris<-read.csv("iris.data.txt",header = T)
+minmaxnorm<-function(trdata,minV=0,maxV=1,tedata=NULL)
+{
+    min<-min(trdata)
+    max<-max(trdata)
+    diff1<-max-min
+    diff2<-maxV-minV
+    v<-vector('numeric')
+    for(i in 1:length(trdata))
+    {
+        x=trdata[i]
+        trdata[i]<-minV+(((x-min)/diff1)*diff2)
+        #v[i]<-y
+    }
+    print("normalized train data:\n")
+    print(trdata)
+    
+    if(!is.null(tedata))
+    {
+        normtedata<-vector('numeric')
+        for(i in 1:length(tedata))  
+        {
+            x=tedata[i]
+            tedata[i]<-minV+(((tedata[i]-min)/diff1)*diff2) 
+        }
+        print("normalized test data:\n")
+        print(tedata)
+    }
+    lt<-list(trdata,tedata)
+    
+    return(lt)
+}
+
+```
+
+```{r}
+zscoreNorm<-function(trdata,tedata=NULL,madflag=0)
+{
+   mn<-mean(trdata)
+  sde<-sd(trdata)
+  library(lsr)
+  ade<-aad(trdata)
+  normtr<-vector('numeric')
+  for(i in 1:length(trdata))
+  {
+    if(madflag==1)
+    {
+    normtr[i]<-(trdata[i]-mn)/ade  
+    }
+    else
+    {
+    normtr[i]<-(trdata[i]-mn)/sde
+    }#v[i]<-y
+  }
+  print("normalized train data:\n")
+  print(trdata)
+    normte<-vector('numeric')
+if(!is.null(tedata))
+{
+  #newdata<-append(as.vector(trdata),as.vector(tedata))
+ # returnValue(class(tedata))
+   #mn2<-mean(newdata)
+    #sde2<-sd(newdata)
+ #   print(newdata)
+  library(lsr)
+  #ade2<-aad(newdata)
+  for(i in 1:length(tedata))
+    {
+    if(madflag==1)
+    {
+    normte[i]<-(tedata[i]-mn)/ade  
+    }
+    else
+    {
+    normte[i]<-(tedata[i]-mn)/sde
+    }
+    }
+   print("normalized test data:\n")
+   print(tedata)
+}
+lt<-list(normtr,normte)
+    return(lt)
+}
+```
+#Q2
+```{r}
+q2data<-c(200, 300, 400, 600,1000)
+```
+```{r}
+minmaxnorm(q2data,0,1)
+```
+
+```{r}
+zscoreNorm(q2data)
+```
+
+```{r}
+zscoreNorm(q2data,,1)
+```
+
+#Q3
+```{r}
+q3data<-c(1.95,3.1,5.68,6.2)
+iris<-read.csv("iris.data.txt",header = T)
+l<-minmaxnorm(iris$X1.4,-1,1,q3data)
+y<-l[[2]]
+y1<-as.data.frame(y)
+library(ggplot2)
+#plot(y1, type="o", col="blue")
+#curve(y)
+```
+
+```{r}
+r<-zscoreNorm(iris$X1.4,q3data)
+```
+
+```{r}
+ p2sample<-data.frame(A=c(1.4,1.8,1.3,0.9,1.5),B=c(1.3,1.4,1.2,3.5,2.1),C=c(2.9,3.2,2.9,3.1,3.3))
+Manhattan<-function(a)
+{
+  V<-vector('numeric')
+  for(i in 1:length(p2sample))
+  {
+   V[i]<-abs(p2sample$A[i]-a[1])+abs(p2sample$B[i]-a[2])+abs(p2sample$C[i]-a[3]) 
+  }
+  print(V)
+}
+```
+
+
+```{r}
+ktablei<-data.frame(X1=c(1,1,0,2,5,6,4,5),X2=c(4,3,4,5,1,2,0,2),Groups=c(1,1,2,2,1,2,1,2))
+ktable<-ktablei
+```
+
+```{r}
+kmeans_manual<-function(d)
+{
+  install.packages('ggplot2')
+  print("hii")
+  par(mfrow=c(1,2))
+  library(ggplot2)
+    #ggplot(d, aes(x=X1,y=X2))+geom_point(colour="white", shape=21, size = 4,aes(fill = factor(Groups)))+scale_fill_manual(values=c("blue", "red"))
+  cenx1=0
+  ceny1=0
+  cenx2=0
+  ceny2=0
+  g11<-subset(d,Groups==1)
+  temp1<-0
+  g22<-subset(d,Groups==2)
+  temp2<-0
+  print("before while")
+  while((!identical(g11,temp1))&&(!identical(g22,temp2)))
+  {
+      print("after while")
+    temp1<-g11
+    temp2<-g22
+    for(i in 1:nrow(g11))
+  {
+    cenx1<-cenx1+g11[i,1]
+    ceny1<-ceny1+g11[i,2]
+  }
+    for(i in 1:nrow(g22))
+  {
+    cenx2<-cenx2+g22[i,1]
+    ceny2<-ceny2+g22[i,2]
+  }
+  cenx1=cenx1/nrow(g11)
+  ceny1=ceny1/nrow(g11)
+  cenx2=cenx2/nrow(g22)
+  ceny2=ceny2/nrow(g22)
+  print(cenx1)
+  print(ceny1)
+  print(cenx2)
+  print(ceny2)
+  dist1<-vector('numeric')
+  dist2<-vector('numeric')
+  for(i in 1:nrow(d))
+  {
+    dist1[i]<-eucli(d[i,1],d[i,2],cenx1,ceny1)
+    dist2[i]<-eucli(d[i,1],d[i,2],cenx2,ceny2)
+    if(dist1[i]<dist2[i])
+    {
+      d[i,3]=1
+    }
+    else
+    {
+      d[i,3]=2
+    }
+  }
+  g11<-subset(d,Groups==1)
+  print(g11)
+  g22<-subset(d,Groups==2)
+  print(g22)
+  }
+  ggplot(d, aes(x=X1,y=X2))+geom_point(colour="white", shape=21, size = 4,aes(fill = factor(Groups)))+scale_fill_manual(values=c("blue", "red"))
+}
+```
+
+```{r}
+eucli<-function(x1,y1,x2,y2)
+{
+  result<-sqrt((x1-x2)^2+(y1-y2)^2)
+  return(result)
+}
+```
+
+```{r}
+ggplot(ktablei, aes(x=X1,y=X2))+geom_point(colour="white", shape=21, size = 4,aes(fill = factor(Groups)))+scale_fill_manual(values=c("blue", "red"))+ggplot(centrod1)
+
+
+```
+

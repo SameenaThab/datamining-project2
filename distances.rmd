@@ -1,0 +1,320 @@
+---
+title: "raja"
+author: "Satish"
+date: "February 16, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+A<-c(1.4,1.8,1.3,0.9,1.5)
+B<-c(1.3,1.4,1.2,3.5,2.1)
+C<-c(2.9,3.2,2.9,3.1,3.3)
+x1<-c(1.4,1.3,2.9)
+x2<-c(1.8,1.4,3.2)
+x3<-c(1.3,1.2,2.9)
+x4<-c(0.9,3.5,3.1)
+x5<-c(1.5,2.1,3.3)
+q4data<-data.frame(A,B,C)
+x<-c(1.25,1.78,3.01)
+manhattan<-vector('numeric')
+euclidean<-vector('numeric')
+minkowski<-vector('numeric')
+supremum<-vector('numeric')
+cose<-vector('numeric')
+
+#print("Manhattan distance between x1 and x")
+manhattan[1]<-dist(as.matrix(rbind(x1,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x2 and x")
+manhattan[2]<-dist(as.matrix(rbind(x2,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x3 and x")
+manhattan[3]<-dist(as.matrix(rbind(x3,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x4 and x")
+manhattan[4]<-dist(as.matrix(rbind(x4,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("Manhattan distance between x5 and x")
+manhattan[5]<-dist(as.matrix(rbind(x5,x)), upper=FALSE, diag=FALSE, method="manhattan")
+#print("***********")
+#print("euclidean distance between x1 and x")
+euclidean[1]<-dist(as.matrix(rbind(x1,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x2 and x")
+euclidean[2]<-dist(as.matrix(rbind(x2,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x3 and x")
+euclidean[3]<-dist(as.matrix(rbind(x3,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x4 and x")
+euclidean[4]<-dist(as.matrix(rbind(x4,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("euclidean distance between x5 and x")
+euclidean[5]<-dist(as.matrix(rbind(x5,x)), upper=FALSE, diag=FALSE, method="euclidean")
+#print("***********")
+#print("minkowski distance between x1 and x")
+minkowski[1]<-dist(as.matrix(rbind(x1,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x2 and x")
+minkowski[2]<-dist(as.matrix(rbind(x2,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x3 and x")
+minkowski[3]<-dist(as.matrix(rbind(x3,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x4 and x")
+minkowski[4]<-dist(as.matrix(rbind(x4,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("minkowski distance between x5 and x")
+minkowski[5]<-dist(as.matrix(rbind(x5,x)), upper=FALSE, diag=FALSE, method="minkowski",p=3)
+#print("***********")
+supremum[1]=dist(as.matrix(rbind(x1,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[2]=dist(as.matrix(rbind(x2,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[3]=dist(as.matrix(rbind(x3,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[4]=dist(as.matrix(rbind(x4,x)), method = "maximum", diag = FALSE, upper = FALSE)
+supremum[5]=dist(as.matrix(rbind(x5,x)), method = "maximum", diag = FALSE, upper = FALSE)
+# cosi<-function(x,y)
+# {
+# sum1<-x[1]*y[1]+x[2]*y[2]+x[3]*y[3]  
+# sum2<-sqrt(x[1]^2+x[2]^2+x[3]^3)
+# sum3<-sqrt(y[1]^2+y[2]^2+y[3]^3)
+# pro1<-sum2*sum3
+# pro2<-sum1/pro1
+# return(pro1)
+# }
+library(lsa)
+cose[1]<-cosine(x1,x)
+cose[2]<-cosine(x2,x)
+cose[3]<-cosine(x3,x)
+cose[4]<-cosine(x4,x)
+cose[5]<-cosine(x5,x)
+
+distances<-data.frame(manhattan,euclidean,minkowski,supremum,cose)
+print(distances)
+```
+
+```{r}
+#Manhattan distances:
+#Point x1:
+
+# Y11 <- c(1.25,1.78,3.01)
+# Y12 <- c(1.4,1.3,2.9)
+# mat <- rbind(Y11, Y12)
+
+dm1 <- dist(mat, upper=TRUE, diag=TRUE, method="manhattan")
+dm1
+
+#Point x2:
+
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.8,1.4,3.2)
+mat <- rbind(Y11, Y12)
+
+dm2 <- dist(mat, upper=TRUE, diag=TRUE, method="manhattan")
+dm2
+
+#Point x3:
+
+Y11 <- c(1.25,1.78,3.01)
+Y13 <- c(1.3,1.2,2.9)
+mat <- rbind(Y11, Y13)
+
+dm3 <- dist(mat, upper=TRUE, diag=TRUE, method="manhattan")
+dm3
+
+#Point x4:
+
+Y11 <- c(1.25,1.78,3.01)
+Y14 <- c(0.9,3.5,3.1)
+mat <- rbind(Y11, Y14)
+
+dm4 <- dist(mat, upper=TRUE, diag=TRUE, method="manhattan")
+dm4
+
+#Point x5:
+
+Y11 <- c(1.25,1.78,3.01)
+Y15 <- c(1.5,2.1,3.3)
+mat <- rbind(Y11, Y15)
+
+dm5 <- dist(mat, upper=TRUE, diag=TRUE, method="manhattan")
+dm5
+
+
+#Euclidean distances
+#Point 1
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.4,1.3,2.9)
+mat <- rbind(Y11, Y12)
+
+de1 <- dist(mat, upper=TRUE, diag=TRUE, method="euclidean", p=2)
+de1
+
+#Point 2
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.8,1.4,3.2)
+mat <- rbind(Y11, Y12)
+
+de2 <- dist(mat, upper=TRUE, diag=TRUE, method="euclidean", p=2)
+de2
+
+#Point 3
+Y11 <- c(1.25,1.78,3.01)
+Y13 <- c(1.3,1.2,2.9)
+mat <- rbind(Y11, Y13)
+
+de3<- dist(mat, upper=TRUE, diag=TRUE, method="euclidean", p=2)
+de3
+
+#Point 4
+Y11 <- c(1.25,1.78,3.01)
+Y14 <- c(0.9,3.5,3.1)
+mat <- rbind(Y11, Y14)
+
+de4<- dist(mat, upper=TRUE, diag=TRUE, method="euclidean", p=2)
+de4
+
+#Point 5
+Y11 <- c(1.25,1.78,3.01)
+Y15 <- c(1.5,2.1,3.3)
+mat <- rbind(Y11, Y15)
+
+de5<- dist(mat, upper=TRUE, diag=TRUE, method="euclidean", p=2)
+de5
+
+#Minkowski Distances
+#point1
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.4,1.3,2.9)
+mat <- rbind(Y11, Y12)
+
+dmi1=dist(mat, method = "minkowski", diag = FALSE, upper = FALSE, p = 3)
+dmi1
+
+
+#point2
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.8,1.4,3.2)
+mat <- rbind(Y11, Y12)
+
+dmi2=dist(mat, method = "minkowski", diag = FALSE, upper = FALSE, p = 3)
+dmi2
+
+#point3
+Y11 <- c(1.25,1.78,3.01)
+Y13 <- c(1.3,1.2,2.9)
+mat <- rbind(Y11, Y13)
+
+dmi3=dist(mat, method = "minkowski", diag = FALSE, upper = FALSE, p = 3)
+dmi3
+
+#point4
+Y11 <- c(1.25,1.78,3.01)
+Y14 <- c(0.9,3.5,3.1)
+mat <- rbind(Y11, Y14)
+
+dmi4=dist(mat, method = "minkowski", diag = FALSE, upper = FALSE, p = 3)
+dmi4
+
+
+
+#point5
+Y11 <- c(1.25,1.78,3.01)
+Y15 <- c(1.5,2.1,3.3)
+mat <- rbind(Y11, Y15)
+
+dmi5=dist(mat, method = "minkowski", diag = FALSE, upper = FALSE, p = 3)
+dmi5
+
+#Supremum distances
+#point1
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.4,1.3,2.9)
+mat <- rbind(Y11, Y12)
+
+dsu1=dist(mat, method = "maximum", diag = FALSE, upper = FALSE, p = 3)
+dsu1
+
+#point2
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.8,1.4,3.2)
+mat <- rbind(Y11, Y12)
+
+dsu2=dist(mat, method = "maximum", diag = FALSE, upper = FALSE, p = 3)
+dsu2
+
+#point3
+Y11 <- c(1.25,1.78,3.01)
+Y13 <- c(1.3,1.2,2.9)
+mat <- rbind(Y11, Y13)
+
+dsu3=dist(mat, method = "maximum", diag = FALSE, upper = FALSE, p = 3)
+dsu3
+#point4
+Y11 <- c(1.25,1.78,3.01)
+Y14 <- c(0.9,3.5,3.1)
+mat <- rbind(Y11, Y14)
+
+dsu4=dist(mat, method = "maximum", diag = FALSE, upper = FALSE, p = 3)
+dsu4
+
+#point5
+Y11 <- c(1.25,1.78,3.01)
+Y15 <- c(1.5,2.1,3.3)
+mat <- rbind(Y11, Y14)
+
+dsu5=dist(mat, method = "maximum", diag = FALSE, upper = FALSE, p = 3)
+dsu5
+
+
+
+#Cosine Similarity:
+
+#Point 1
+library(lsa)
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.4,1.3,2.9)
+cos1 <- cosine(Y11,Y12)
+cos1
+
+#Point 2
+Y11 <- c(1.25,1.78,3.01)
+Y12 <- c(1.8,1.4,3.2)
+Cos2 <- cosine(Y11,Y12)
+Cos2
+
+#Point 3
+Y11 <- c(1.25,1.78,3.01)
+Y13<- c(1.3,1.2,2.9)
+Cos3 <- cosine(Y11,Y13)
+Cos3
+
+
+
+
+
+#Point 4
+Y11 <- c(1.25,1.78,3.01)
+Y14<- c(0.9,3.5,3.1)
+Cos4 <- cosine(Y11,Y14)
+Cos4
+
+#Point 5
+Y11 <- c(1.25,1.78,3.01)
+Y15<- c(0.9,3.5,3.1)
+Cos5 <- cosine(Y11,Y14)
+Cos5
+
+#data frame of all distances
+
+manhattan = c(dm1, dm2, dm3, dm4,dm5) 
+euclidean = c(de1, de2, de3, de4,de5) 
+minkowski = c(dmi1, dmi2, dmi3, dmi4,dmi5)
+supremum = c(dsu1, dsu2, dsu3, dsu4,dsu5)
+cosine=     c(cos1, Cos2, Cos3, Cos4,Cos5)
+df_distances = data.frame(manhattan, euclidean, minkowski, supremum,cosine)
+df_distances
+
+
+
+
+
+
+
+```
